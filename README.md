@@ -14,7 +14,7 @@ Simu_count data.R is the main R script for conducting the simulation study.
 - true_para: parameter vector
 - a: extra-dispersion parameter
 
-##Data Simulation
+## Data Simulation
 - Reward: daily step count, each column indicates a simulated dataset
 - Mot: motivational messages, categorical
 - Feed: feedback messages, categorical
@@ -23,7 +23,7 @@ Simu_count data.R is the main R script for conducting the simulation study.
 - Data: a list containing the simulated data
 
 
-##Analysis
+## Analysis
 - Estresults: a function for calculating estimates, bias, RMSE, SE and relative bias.
 - GetAnalyses: a function that helps obtain all performance results
 - results: a list of comparison results
