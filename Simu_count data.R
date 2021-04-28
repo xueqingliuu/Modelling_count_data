@@ -61,16 +61,18 @@ Estresults <- function(Data, transformation) {
            NB=coef(geem(Reward ~ t + factor(Mot) + factor(Feed), family = negative.binomial(theta=2), id = id, corstr = "independence"))[-1],
            log=coef(lmer(log(Reward+1) ~ t + factor(Mot) + factor(Feed) + (1|id)))$id[1,-1],
            SR=coef(lmer(sqrt(Reward) ~ t + factor(Mot) + factor(Feed) + (1|id)))$id[1,-1],
-           bcox=coef(lmer(((Reward^lam-1)/lam) ~ t + factor(Mot) + factor(Feed) + (1|id)))$id[1,-1])
+           bcox=coef(lmer(((Reward^0.5 - 1)/0.5) ~ t + factor(Mot) + factor(Feed) + (1|id)))$id[1,-1])
   }
   Est <- matrix(nrow = 8, ncol = simu)
   Bias <- matrix(nrow = 8, ncol = simu)
   Relative.bias <- matrix(nrow = 8, ncol = simu)
+  
   for (s in (1:simu)) {
-    Est[,s]=PointEst(Data$Mot[,s], Data$Feed[,s], Data$t[,s], Data$Reward[,s], Data$id[,s])
+    Est[,s]=unlist(PointEst(Data$Mot[,s], Data$Feed[,s], Data$t[,s], Data$Reward[,s], Data$id[,s]))
     Bias[,s]=Est[,s] - Data$true
     Relative.bias[,s]=Bias[,s]/Data$true
   }
+  
   return(
   data.frame(
   true=Data$true,
@@ -82,3 +84,19 @@ Estresults <- function(Data, transformation) {
   )
   )
 }
+
+GetAnalyses=function(Data) {
+  list(
+    Data=Data,
+    NB=Estresults(Data, transformation="NB"),
+    Poi=Estresults(Data, transformation="Poi"),
+    Quasipoi=Estresults(Data, transformation="Poi"),
+    SR=Estresults(Data, transformation="SR"),
+    log=Estresults(Data, transformation="log"),
+    bcox=Estresults(Data, transformation="bcox")
+  )
+}
+
+####Comparison results
+results <- GetAnalyses(Data)
+
