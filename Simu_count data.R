@@ -50,8 +50,11 @@ for (s in 1:simu) {
 ####dataset####
 Data <- list(Mot=Mot, Feed=Feed, Reward=Reward, id=id, t=t0, true=true_para)
 ####plot####
-
-
+library(ggplot2)
+colMeans(Reward)
+data_frame <- data.frame(Mot[,1], Feed[,1], Reward[,1], id[,1], t0[,1])
+ggplot(data_frame, aes(x = id[,1], y = Reward[,1])) + geom_point() + labs(x="Subject",y="Step count")
+ggplot(data_frame, aes(x = t0[,1], y = Reward[,1])) + geom_point() + labs(x="Study day",y="Step count")
 ####Analysis####
 Estresults <- function(Data, transformation) {
   PointEst <- function(Mot, Feed, t, Reward, id) {
@@ -77,7 +80,7 @@ Estresults <- function(Data, transformation) {
   data.frame(
   true=Data$true,
   Meanest=apply(Est, 1, mean),
-  EmpiricalVar=apply(Est, 1, var),
+  EmpiricalSE=apply(Est, 1, sd),
   MeanBias=apply(Bias, 1, mean),
   MeanRMSE=apply(Bias, 1, function(x) sqrt(mean(x^2))),
   MeanRelbias=apply(Relative.bias, 1, mean)
